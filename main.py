@@ -5,7 +5,7 @@ from matplotlib import animation
 amount_of_people = 50
 
 n = amount_of_people - 1
-p = 1 / (amount_of_people - 1)
+p = 1 / float(amount_of_people - 1)
 start_money = 50
 
 bank = start_money*np.ones([amount_of_people])
