@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from matplotlib import animation
 
 amount_of_people = 50
+income_tax = 0.05
+wealth_tax = 0.3
 
 n = amount_of_people - 1
 p = 1 / float(amount_of_people - 1)
@@ -28,7 +30,12 @@ def animate(i):
     smpl_w_money[bank == 0] = 0
     smpl_wo_money[bank > 0] = 0
     sample = smpl_w_money + smpl_wo_money
-    bank = bank + sample - 1*(bank > 0)
+    taxed_transfer = income_tax*sample
+    not_taxed_transfer = (1-income_tax)*sample - 1*(bank > 0)
+    distributed_income_tax = np.sum(np.abs(taxed_transfer)) / (amount_of_people)
+    taxed_wealth = wealth_tax*bank
+    distributed_wealth_tax = np.sum(np.abs(taxed_wealth)) / (amount_of_people)
+    bank = bank + not_taxed_transfer + distributed_income_tax - taxed_wealth + distributed_wealth_tax
     bank = np.sort(bank)
     for rect, y in zip(bar, bank):
         rect.set_height(y)
@@ -40,6 +47,6 @@ def animate(i):
 anim = animation.FuncAnimation(fig, animate, init_func=init,
                                frames=3000, interval=1, blit=False)
 
-anim.save('basic_animation.mp4', fps=60, extra_args=['-vcodec', 'libx264'])
+anim.save('basic_animation_high_wealth_low_income_tax.mp4', fps=60, extra_args=['-vcodec', 'libx264'])
 
 plt.show()
